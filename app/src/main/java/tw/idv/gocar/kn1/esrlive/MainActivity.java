@@ -22,8 +22,23 @@ import  android.webkit.WebViewClient ;
 import android.content.Intent;
 import android.widget.ProgressBar;
 
+//GCM ↓
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+//GCM ！
 
 public class MainActivity extends Activity {
     WebView mWebview;
@@ -31,6 +46,14 @@ public class MainActivity extends Activity {
     private final static int FILECHOOSER_RESULTCODE = 1;
     private final String HOMEPAGE = "http://project.gocar.idv.tw/esr/";
 
+    //GCM ↓
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String TAG = "MainActivity";
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private ProgressBar mRegistrationProgressBar;
+    private TextView mInformationTextView;
+    //GCM ！
 
     @Override
     public void onCreate(Bundle saveInstanceState){ // 主要WebView
@@ -39,6 +62,32 @@ public class MainActivity extends Activity {
         super.onCreate(saveInstanceState);
         this.getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
+
+        mRegistrationProgressBar = (ProgressBar) findViewById(R.id.registrationProgressBar);
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences
+                        .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
+                /* 影響WEBVIEW
+                                 if (sentToken) {
+                                                     mInformationTextView.setText(getString(R.string.gcm_send_message));
+                                 } else {
+                                     mInformationTextView.setText(getString(R.string.token_error_message));
+                                 }
+                                */
+            }
+        };
+        // 影響WEBVIEW // mInformationTextView = (TextView) findViewById(R.id.informationTextView);
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+
         getWindow().setFeatureInt(Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON);
         // WebView
         mWebview = (WebView) findViewById(R.id.webview);
@@ -51,7 +100,41 @@ public class MainActivity extends Activity {
         mWebview.setWebChromeClient(new WebviewFileUpload());
         mWebview.loadUrl(HOMEPAGE); // 讀取WEBVIEW
     }
+    // GCM ↓
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
+    }
 
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+    // GCM ↑
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) { // 回傳所選擇的圖檔
         if (requestCode == FILECHOOSER_RESULTCODE) {
