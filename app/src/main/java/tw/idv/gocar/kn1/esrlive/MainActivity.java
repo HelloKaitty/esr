@@ -6,6 +6,7 @@ import  android.app.AlertDialog;
 import android.app.ProgressDialog;
 import  android.content.DialogInterface ;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import  android.os.Bundle ;
 
@@ -152,30 +153,16 @@ public class MainActivity extends Activity {
             return true;
         }
         //Show loader on url load
-        public void onLoadResource (WebView view, String url) {
-
-            // if url contains string androidexample
-            // Then show progress  Dialog
-            if (progressDialog == null && url.contains("gocar")) {
-                // in standard case YourActivity.this
-                progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setMessage("資料讀取中...");
-                progressDialog.show();
-            }
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            progressDialog = ProgressDialog.show(MainActivity.this, null, "資料讀取中，請稍候...");
+            super.onPageStarted(view, url, favicon);
         }
 
-        // Called when all page resources loaded
+        @Override
         public void onPageFinished(WebView view, String url) {
-            try{
-                // Close progressDialog
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                    progressDialog = null;
-                }
-            }catch(Exception exception){
-                exception.printStackTrace();
-            }
-
+            progressDialog.dismiss();
+            super.onPageFinished(view, url);
         }
 
     }
