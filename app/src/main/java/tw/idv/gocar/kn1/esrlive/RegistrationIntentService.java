@@ -15,7 +15,13 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 
 public class RegistrationIntentService extends IntentService {
 
@@ -75,6 +81,31 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
+        String target  = "";
+        String result = "";
+        target = "http://project.gocar.idv.tw/gcm_test/ins_token.php?token="+token;
+        URL url;
+        try {
+            url = new URL(target);
+            HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();  //创建一个HTTP连接
+            InputStreamReader in = new InputStreamReader(
+                    urlConn.getInputStream()); // 获得读取的内容
+            /*
+            BufferedReader buffer = new BufferedReader(in); // 获取输入流对象
+            String inputLine = null;
+            //通过循环逐行读取输入流中的内容
+            while ((inputLine = buffer.readLine()) != null) {
+                result += inputLine + "\n";
+            }
+            in.close(); //关闭字符输入流对象
+            */
+            urlConn.disconnect();   //断开连接
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
