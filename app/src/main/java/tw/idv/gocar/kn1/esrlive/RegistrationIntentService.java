@@ -7,6 +7,7 @@ package tw.idv.gocar.kn1.esrlive;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -83,7 +84,8 @@ public class RegistrationIntentService extends IntentService {
         // Add custom implementation, as needed.
         String target  = "";
         String result = "";
-        target = "http://project.gocar.idv.tw/gcm_test/ins_token.php?token="+token;
+        String devicename = Build.ID;
+        target = "http://project.gocar.idv.tw/gcm_test/ins_token.php?user="+devicename+"&token="+token;
         URL url;
         try {
             url = new URL(target);
