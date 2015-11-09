@@ -24,7 +24,7 @@
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:text="安安我是啟動畫面"
+        android:text="\nV1.05 優化通知介面\n新增震動及燈號閃動"
         android:textColor="#454545"
-        android:textSize="12sp"/>
+        android:textSize="14sp"/>
 </RelativeLayout>

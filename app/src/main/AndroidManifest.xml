@@ -12,6 +12,8 @@
     <permission android:name="tw.idv.gocar.kn1.esrlive.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="tw.idv.gocar.kn1.esrlive.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
 
     <application
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"

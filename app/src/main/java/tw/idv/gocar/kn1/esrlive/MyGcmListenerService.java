@@ -2,12 +2,17 @@ package tw.idv.gocar.kn1.esrlive;
 
 /**
  * Created by 蔡小開 on 2015/11/6.
+ * 收到推播資訊的處理
+ * http://www.codedata.com.tw/mobile/android-tutorial-the-5th-class-2-notification
  */
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,14 +73,20 @@ public class MyGcmListenerService extends GcmListenerService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.icon);// 建立大圖示需要的Bitmap物件
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.icon) // ICON圖唷
-                .setContentTitle("GCM Message")
+                .setSmallIcon(R.drawable.icon) // ICON小圖
+                .setLargeIcon(largeIcon) // ICON大圖
+                .setContentTitle("ESR Live!")
                 .setContentText(message)
-                .setAutoCancel(true)
+                .setAutoCancel(true) // 點擊後自動消失
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                //.setOngoing(true) // 用戶不能手動清除
+                .setVibrate(new long[] {0,200,800,500})
+                .setLights(Color.GREEN, 1000, 1000);
+                ;
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

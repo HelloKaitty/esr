@@ -2,6 +2,7 @@ package tw.idv.gocar.kn1.esrlive;
 
 /**
  * Created by 蔡小開 on 2015/11/6.
+ * 註冊手機端的GCM TOKEN
  */
 
 import android.app.IntentService;
