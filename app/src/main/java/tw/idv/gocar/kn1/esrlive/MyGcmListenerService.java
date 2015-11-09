@@ -6,6 +6,7 @@ package tw.idv.gocar.kn1.esrlive;
  * http://www.codedata.com.tw/mobile/android-tutorial-the-5th-class-2-notification
  */
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -36,8 +37,12 @@ public class MyGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
+        String n_url = data.getString("n_url");
+        //String n_url = "http://www.google.com";
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
+        Log.d(TAG, "N_Url: " + n_url);
+
 /*
         if (from.startsWith("/topics/")) {
             // message received from some topic.
@@ -57,7 +62,7 @@ public class MyGcmListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message);
+        sendNotification(message,n_url);
         // [END_EXCLUDE]
     }
     // [END receive_message]
@@ -67,14 +72,15 @@ public class MyGcmListenerService extends GcmListenerService {
      *
      * @param message GCM message received.
      */
-    private void sendNotification(String message) {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void sendNotification(String message,String n_url) {
+        Intent intent = new Intent(this, MainActivity.class); // 按下去要開什麼
+        intent.putExtra("n_url", n_url); // 按下去要傳什麼
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.icon);// 建立大圖示需要的Bitmap物件
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.icon) // ICON小圖
                 .setLargeIcon(largeIcon) // ICON大圖

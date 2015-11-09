@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
     WebView mWebview;
     private ValueCallback<Uri> mUploadMessage; // FileUpload
     private final static int FILECHOOSER_RESULTCODE = 1;
-    private final String HOMEPAGE = "http://project.gocar.idv.tw/esr/";
+    private String HOMEPAGE = "http://project.gocar.idv.tw/esr/";
 
     //GCM ↓
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -55,6 +55,7 @@ public class MainActivity extends Activity {
     private TextView mInformationTextView;
     //GCM ！
 
+
     @Override
     public void onCreate(Bundle saveInstanceState){ // 主要WebView
         //final Activity mActivity = this;
@@ -62,6 +63,7 @@ public class MainActivity extends Activity {
         super.onCreate(saveInstanceState);
         this.getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
+        Bundle extras = getIntent().getExtras();
 
         mRegistrationProgressBar = (ProgressBar) findViewById(R.id.registrationProgressBar);
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -82,6 +84,7 @@ public class MainActivity extends Activity {
             }
         };
         // 影響WEBVIEW // mInformationTextView = (TextView) findViewById(R.id.informationTextView);
+
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
@@ -90,6 +93,17 @@ public class MainActivity extends Activity {
 
         getWindow().setFeatureInt(Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON);
         // WebView
+
+
+        String n_url;
+        if (extras != null) {
+            //HOMEPAGE = extras.getString("n_url");
+            n_url = extras.getString("n_url");
+            HOMEPAGE = n_url;
+            //HOMEPAGE = "http://tw.yahoo.com";
+            // and get whatever type user account id is
+        }
+
         mWebview = (WebView) findViewById(R.id.webview);
         mWebview.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         mWebview.getSettings().setJavaScriptEnabled(true); // 支援JAVA SCRIPT
