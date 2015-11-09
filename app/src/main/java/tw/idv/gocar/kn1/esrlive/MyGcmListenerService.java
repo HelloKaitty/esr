@@ -38,13 +38,13 @@ public class MyGcmListenerService extends GcmListenerService {
         String message = data.getString("message");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
-
+/*
         if (from.startsWith("/topics/")) {
             // message received from some topic.
         } else {
             // normal downstream message.
         }
-
+*/
         // [START_EXCLUDE]
         /**
          * Production applications would usually process the message here.
@@ -85,7 +85,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentIntent(pendingIntent)
                 //.setOngoing(true) // 用戶不能手動清除
                 .setVibrate(new long[] {0,200,800,500})
-                .setLights(Color.GREEN, 1000, 1000);
+                .setLights(Color.GREEN, 1000, 1000)
                 ;
 
         NotificationManager notificationManager =
