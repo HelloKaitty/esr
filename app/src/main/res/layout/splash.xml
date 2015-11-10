@@ -24,7 +24,7 @@
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:text="\nV1.05 優化通知介面\n新增震動及燈號閃動"
+        android:text="\nVer 1.06 可自訂推播訊息所開啟頁面"
         android:textColor="#454545"
         android:textSize="14sp"/>
 </RelativeLayout>
